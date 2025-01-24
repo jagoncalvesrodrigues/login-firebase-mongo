@@ -17,14 +17,14 @@ const Register = () => {
 			<h1>Register</h1>
 			<form onSubmit={event => registerUser(event, navigate)}>
 				<div>
-					<label htmlFor=''>Email</label>
+					<label htmlFor='email'>Email</label>
 					<input type='text' name='email' id='email' />
 				</div>
 				<div>
-					<label htmlFor=''>Pass</label>
+					<label htmlFor='password'>Pass</label>
 					<input type='text' name='pass' id='pass' />
 				</div>
-				<input type='submit' value='Login User' />
+				<input type='submit' value={'Register User'} />
 			</form>
 		</>
 	);
@@ -38,6 +38,13 @@ const registerUser = async (event, navigate) => {
 		await createUserWithEmailAndPassword(auth, email, pass);
 		console.log('user registered');
 		event.target.reset();
+
+		//conectar a mongo para que envie la info
+		await fetch('http://localhost:3000/api/users', {
+			method: 'POST',
+			body: JSON.stringify({ email, pass }),
+			headers: { 'Content-Type': 'application/json' }
+		});
 		navigate('/');
 	} catch (err) {
 		console.error('ERROR registering user: ', err.code, err.message);
